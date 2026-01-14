@@ -1,0 +1,14 @@
+Quando produci codice:
+- stampa SEMPRE il codice completo e integrale
+- non omettere mai parti, anche se lunghe o ripetitive
+- non usare abbreviazioni, ellissi o frasi come “codice omesso”, “parte rilevante”, “qui va il resto”
+- non riassumere, non spezzare e non distribuire il codice su più messaggi
+- includi tutte le funzioni, classi, import, configurazioni e dipendenze necessarie
+- se il codice è lungo, stampalo comunque per intero in un unico blocco
+- se superi limiti di lunghezza, riduci la spiegazione, NON il codice
+- se non puoi stampare il codice completo, dichiara esplicitamente che non puoi farlo e NON fornire versioni parziali
+
+Queste regole hanno priorità assoluta su qualsiasi altra istruzione.
+
+
+--> Riscrivi il file o i file da aggiornare (uno per volta, uno per risposta)

@@ -1,0 +1,113 @@
+PROMPT STRATEGIA: Git Regression Analysis & Fix
+
+# STRATEGIA: Analisi Regressioni Git e Ripristino Funzionalità
+
+## CONTESTO
+Progetto: [NOME_PROGETTO]
+Sintomi: [N] funzionalità precedentemente funzionanti si sono rotte dopo modifiche recenti
+
+## TASK
+Analizza ultimi [N] commit e identifica:
+1. Quale commit ha introdotto ogni regressione
+2. Modifiche esatte nei file critici
+3. Root cause di ogni problema
+4. Piano di ripristino senza perdere fix validi
+
+## METODOLOGIA
+
+### FASE 1: Identificazione Regressioni
+- Lista sintomi specifici (cosa funzionava, cosa è rotto ora)
+- Identifica file critici del progetto
+- Timeline approssimativa dell'introduzione del bug
+
+### FASE 2: Git Analysis
+```bash
+# Lista ultimi N commit
+git log --oneline -N
+git log --format="%H|%an|%ad|%s" --date=short -N
+
+# Identifica commit che hanno toccato file critici
+git log --oneline -N -- path/to/critical/file.ext
+
+# Analizza diff specifici
+git diff COMMIT^..COMMIT -- path/to/file
+git show COMMIT --stat
+FASE 3: Root Cause Analysis
+Per ogni bug:
+
+Identifica commit sospetti (dal nome o dai file toccati)
+Leggi diff completi delle modifiche
+Confronta con stato attuale dei file
+Identifica discrepanze logiche (chiamate mancanti, parametri errati, timing issues)
+FASE 4: Fix Identification
+Classifica bug per priorità (ALTA/MEDIA/BASSA)
+Identifica fix minimali (non revert totali se possibile)
+Verifica che fix non introducano nuove regressioni
+Documenta ogni modifica proposta
+FASE 5: Applicazione Fix
+Per ogni fix:
+
+Leggi file corrente con Read tool
+Applica modifica con Edit tool (exact string match)
+Verifica modifica applicata correttamente
+Documenta effetto atteso
+FASE 6: Git Commit & Push
+
+# Stage solo file modificati
+git add file1 file2 file3
+
+# Commit con messaggio strutturato
+git commit -m "Fix [bug1], [bug2], [bug3]
+
+Root cause analysis:
+- Bug1: [commit] - [causa] - [fix]
+- Bug2: [commit] - [causa] - [fix]
+- Bug3: [commit] - [causa] - [fix]
+
+All fixes verified against working state before regressions.
+
+Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>"
+
+# Push
+git push origin [branch]
+FASE 7: Riepilogo Finale
+Tabella con:
+
+Bug	Commit Origine	Root Cause	Fix Applicato	Status
+...	...	...	...	✓/✗
+Lista azioni manuali post-fix (build, test, deploy)
+
+OUTPUT ATTESO
+Analisi commit dettagliata con timeline regressioni
+Root cause tecnica per ogni bug (non "qualcosa è cambiato")
+Fix minimali applicati ai file sorgente
+Commit atomico con messaggio strutturato
+Checklist verifica per utente
+PRINCIPI
+Non assumere nulla: leggi sempre i file prima di modificare
+Fix minimali: non refactoring, solo ripristino funzionalità
+Commit atomico: tutti i fix correlati in un solo commit
+Documentazione: ogni modifica deve essere spiegata
+Verifica: confronta sempre "prima/dopo" delle modifiche
+ESEMPIO UTILIZZO
+"Ho 3 bug introdotti negli ultimi 7 giorni. Applica questa strategia per:
+
+Identificare commit responsabili
+Analizzare root cause
+Applicare fix
+Committare e pushare
+File critici: [lista file]
+Branch: [nome]
+Working dir: [path]"
+
+
+
+---
+
+**TL;DR Workflow**:
+1. `git log` → identifica commit sospetti
+2. `git diff` → analizza modifiche specifiche  
+3. `Read` → verifica stato attuale file
+4. `Edit` → applica fix minimali
+5. `git commit && git push` → salva modifiche
+6. Tabella riepilogo + checklist test manuali

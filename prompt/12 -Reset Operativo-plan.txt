@@ -1,0 +1,1 @@
+Interrompi l’attività corrente. Estrai requisiti espliciti e impliciti dalla conversazione. Produci un piano completo di validazione con checklist. Risolvi eventuali ambiguità. Auto-approva il piano e prosegui attenendoti rigorosamente ad esso

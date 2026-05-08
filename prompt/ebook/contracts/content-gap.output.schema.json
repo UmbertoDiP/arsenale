@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ContentGapAuditOutput",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "moduleId": { "type": "string", "const": "content-gap" },
+    "version": { "type": "string" },
+    "overallScore": { "type": "number", "minimum": 0, "maximum": 10 },
+    "overallSeverity": { "type": "string", "enum": ["OK", "BASSO", "MEDIO", "ALTO", "CRITICO"] },
+    "assumptions": { "type": "array", "items": { "type": "string" } },
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string" },
+          "section": { "type": "string" },
+          "priority": { "type": "string", "enum": ["BASSO", "MEDIO", "ALTO", "CRITICO"] },
+          "problem": { "type": "string" },
+          "impact": { "type": "string" },
+          "missing": { "type": "string" },
+          "fix": { "type": "string" },
+          "example": { "type": "string" },
+          "researchDirections": { "type": "array", "items": { "type": "string" } }
+        },
+        "required": ["id", "section", "priority", "problem", "impact", "missing", "fix", "example", "researchDirections"]
+      }
+    },
+    "top10": { "type": "array", "items": { "type": "string" }, "maxItems": 10 },
+    "rewriteSections": { "type": "array", "items": { "type": "string" } },
+    "solidSections": { "type": "array", "items": { "type": "string" } },
+    "improvementPlan": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "step": { "type": "integer", "minimum": 1 },
+          "action": { "type": "string" },
+          "targets": { "type": "array", "items": { "type": "string" } }
+        },
+        "required": ["step", "action", "targets"]
+      }
+    }
+  },
+  "required": ["moduleId", "version", "overallScore", "overallSeverity", "findings", "top10", "rewriteSections", "solidSections", "improvementPlan"]
+}
+

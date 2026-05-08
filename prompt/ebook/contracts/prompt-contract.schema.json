@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "PromptContract",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "id": { "type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$" },
+    "version": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$" },
+    "name": { "type": "string", "minLength": 1 },
+    "role": { "type": "string", "enum": ["INGESTION", "ARCHITECT", "WRITER", "CRITIC", "FIXER", "EXPORT_DESIGN"] },
+    "sourcePromptPath": { "type": "string" },
+    "inputs": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "schema": { "type": "object" },
+        "example": { "type": "object" }
+      },
+      "required": ["schema", "example"]
+    },
+    "outputs": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "schemaPath": { "type": "string" },
+        "example": { "type": "object" }
+      },
+      "required": ["schemaPath", "example"]
+    },
+    "runtime": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "outputFormat": { "type": "string", "enum": ["json"] },
+        "deterministic": { "type": "boolean" }
+      },
+      "required": ["outputFormat", "deterministic"]
+    },
+    "promptTemplate": { "type": "string", "minLength": 1 }
+  },
+  "required": ["id", "version", "name", "role", "inputs", "outputs", "runtime", "promptTemplate"]
+}
+

@@ -1,0 +1,30 @@
+{
+  "project": {
+    "title": "Titolo Libro (placeholder)",
+    "niche": "Nicchia / categoria (placeholder)",
+    "language": "it",
+    "tone": "enterprise, pragmatico",
+    "persona": "dev"
+  },
+  "workflow": {
+    "phase": "INGESTION",
+    "criticThresholdScore": 8,
+    "blockSeverities": ["CRITICO", "ALTO"]
+  },
+  "quality": {
+    "last": {
+      "moduleId": "content-gap",
+      "score": 0,
+      "severity": "OK"
+    },
+    "history": []
+  },
+  "artifacts": {
+    "canonicalMarkdownPath": "",
+    "kdpMarkdownPath": "",
+    "pdfStablePath": "",
+    "coversDir": "",
+    "previewImagesDir": ""
+  }
+}
+

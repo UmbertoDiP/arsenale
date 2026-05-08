@@ -1,0 +1,70 @@
+{
+  "id": "content-gap",
+  "version": "1.0.0",
+  "name": "Content Gap & Enhancement Audit",
+  "role": "CRITIC",
+  "sourcePromptPath": "prompt/ebook/content-gap.txt",
+  "inputs": {
+    "schema": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "documentMarkdown": { "type": "string", "minLength": 1 },
+        "context": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "bookTitle": { "type": "string" },
+            "audience": { "type": "string" },
+            "techStack": { "type": "string" },
+            "yearRange": { "type": "string" }
+          }
+        },
+        "constraints": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "noHallucinations": { "type": "boolean" },
+            "preferActionableCode": { "type": "boolean" }
+          }
+        }
+      },
+      "required": ["documentMarkdown"]
+    },
+    "example": {
+      "documentMarkdown": "# Titolo\n\n## Capitolo 1\nTesto...",
+      "context": { "bookTitle": "Esempio", "audience": "enterprise", "techStack": "React + Node", "yearRange": "2024-2026" },
+      "constraints": { "noHallucinations": true, "preferActionableCode": true }
+    }
+  },
+  "outputs": {
+    "schemaPath": "prompt/ebook/contracts/content-gap.output.schema.json",
+    "example": {
+      "moduleId": "content-gap",
+      "version": "1.0.0",
+      "overallScore": 7.5,
+      "overallSeverity": "ALTO",
+      "assumptions": ["Documento parziale (draft) senza appendici complete"],
+      "findings": [
+        {
+          "id": "F-001",
+          "section": "Capitolo 1",
+          "priority": "ALTO",
+          "problem": "Sezione troppo generica e non implementabile.",
+          "impact": "Riduce la credibilità tecnica e impedisce applicazione pratica.",
+          "missing": "Esempi reali, snippet deployabili, trade-off.",
+          "fix": "Aggiungere un caso d’uso completo con codice e checklist di verifica.",
+          "example": "Aggiungere esempio: struttura progetto, snippet, test, comandi di run.",
+          "researchDirections": ["Documentazione ufficiale", "Best practice 2024-2026", "Trade-off tra alternative"]
+        }
+      ],
+      "top10": ["F-001"],
+      "rewriteSections": ["Capitolo 1"],
+      "solidSections": [],
+      "improvementPlan": [{ "step": 1, "action": "Riscrivere le sezioni critiche introducendo esempi concreti.", "targets": ["Capitolo 1"] }]
+    }
+  },
+  "runtime": { "outputFormat": "json", "deterministic": true },
+  "promptTemplate": "Agisci come revisore tecnico senior, architetto software e editor di contenuti enterprise. Analizza il documento fornito e produci un report rigoroso sulle lacune contenutistiche, strutturali e tecniche.\n\nVincoli:\n- NON riassumere: individua cosa manca, cosa è debole, cosa è ambiguo.\n- Classifica ogni finding con priorità: CRITICO | ALTO | MEDIO | BASSO.\n- Verifica qualità tecnica: codice reale, coerenenza framework moderni, pattern enterprise, architetture scalabili, esempi quasi-produttivi, flussi corretti.\n- Concludi con top10, sezioni da riscrivere, sezioni solide, piano step-by-step.\n\nFORMATO OUTPUT (OBBLIGATORIO):\n- Devi restituire SOLO JSON valido, senza Markdown e senza testo extra.\n- Il JSON deve rispettare lo schema: prompt/ebook/contracts/content-gap.output.schema.json\n\nInput (JSON):\n{{INPUT_JSON}}\n\nDocumento (Markdown):\n{{DOCUMENT_MARKDOWN}}\n"
+}
+

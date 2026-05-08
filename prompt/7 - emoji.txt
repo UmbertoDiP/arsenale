@@ -1,0 +1,1 @@
+REGOLA CRITICA: Non usare MAI emoji in log, commenti, codice, commit message o documentazione tecnica. Solo UI frontend se esplicitamente richiesto. Causano problemi encoding, grep e CI/CD.

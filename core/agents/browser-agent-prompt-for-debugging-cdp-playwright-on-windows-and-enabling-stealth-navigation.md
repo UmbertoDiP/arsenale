@@ -1,33 +1,33 @@
-Trovato! Ho recuperato tutte le informazioni sul nuovo **Antigravity 2.0**, su come gestisce il comando `/browser` tramite Chrome DevTools (CDP) e su come funziona il formato `SKILL.md` (compatibile con `skills.sh`).
+Trovato! Ho raccolto le informazioni su come un agente può gestire un comando tipo `/browser` tramite Chrome DevTools (CDP) e su come usare un formato tipo `SKILL.md` (quando supportato dal runner/IDE).
 
-Ho anche identificato il vero problema che sta affliggendo la tua installazione su Windows (è un bug noto che impedisce al motore Playwright interno di trovare la cartella dell'utente, mandandolo in tilt).
+Ho anche identificato un problema comune su Windows: Playwright può andare in errore se alcune variabili d'ambiente (es. `HOME`) non sono impostate correttamente per l'utente.
 
 ### Come funziona la soluzione (in breve)
 
-Su Windows, il motore interno ad Antigravity spesso non riesce a lanciare Chrome perché non trova la variabile d'ambiente `HOME`. Inoltre, il sistema anti-bot potrebbe bloccare l'agente.
+Su Windows, alcuni runner/IDE per agenti non riescono a lanciare Chrome perché non trovano la variabile d'ambiente `HOME`. Inoltre, il sistema anti-bot potrebbe bloccare l'agente.
 Questo prompt crea uno **Skill** (un modulo di addestramento on-demand) che istruisce l'agente ad auto-ripararsi: prima fissa il bug del sistema Windows, poi uccide i processi rimasti bloccati (zombie) e infine lancia il browser in modalità invisibile, agganciandosi correttamente.
 
 ---
 
 ### Il Master Prompt (Copia e Incolla)
 
-Copia l'intero blocco di testo qui sotto e incollalo direttamente nella chat di Antigravity:
+Copia l'intero blocco di testo qui sotto e incollalo direttamente nella chat del tuo agente/IDE:
 
 ```markdown
 Crea un file chiamato `SKILL.md` all'interno della cartella `.agent/skills/browser-debugger/` del mio progetto (crea le directory se non esistono). Inserisci esattamente il seguente contenuto nel file:
 
 ---
-name: agy-browser-stealth-debug
-description: Esegue un audit profondo del comando /browser in Antigravity, risolve il bug della variabile HOME su Windows, pulisce i processi orfani e inietta opzioni stealth per bypassare i blocchi di automazione.
+name: browser-stealth-debug
+description: Esegue un audit del comando /browser, risolve il bug della variabile HOME su Windows, pulisce i processi orfani e inietta opzioni stealth per ridurre i blocchi di automazione.
 ---
 
-# Inizializzazione Skill: Debugger Browser Antigravity
+# Inizializzazione Skill: Debugger Browser
 Il comando `/browser` attualmente non riesce ad avviare Chrome o va in timeout in background. Esegui un audit tecnico del workspace e del sistema seguendo questi step esatti nell'ordine indicato:
 
 1. **Risoluzione Bug Playwright Windows (Priorità 1):**
    Il fallimento è spesso dovuto alla mancanza della variabile d'ambiente `$HOME` su Windows, necessaria a Playwright.
    - Esegui un comando nel terminale per impostare permanentemente la variabile (es. tramite PowerShell: `[System.Environment]::SetEnvironmentVariable('HOME', "$env:USERPROFILE", 'User')`).
-   - *Importante:* Se esegui questa modifica, avvisami che dovrò riavviare l'IDE Antigravity affinché abbia effetto.
+   - *Importante:* Se esegui questa modifica, avvisami che dovrò riavviare l'IDE/runner affinché abbia effetto.
 
 2. **Port & Process Cleanup:** 
    Esegui uno script per trovare e terminare (killare) forzatamente tutti i processi `chrome` e `chromedriver` rimasti in sospeso. Assicurati che la porta CDP (9222) sia completamente libera per evitare conflitti.

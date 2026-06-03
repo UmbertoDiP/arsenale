@@ -1,0 +1,57 @@
+{
+  "id": "privacy-scan",
+  "version": "1.0.0",
+  "name": "Privacy & Sensitive Data Scan",
+  "role": "CRITIC",
+  "sourcePromptPath": "prompt/ebook/privacy-scan.txt",
+  "inputs": {
+    "schema": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "documentMarkdown": { "type": "string", "minLength": 1 },
+        "persona": { "type": "string", "enum": ["dev", "pen", "unknown"] },
+        "extraSensitiveTerms": { "type": "array", "items": { "type": "string" } }
+      },
+      "required": ["documentMarkdown", "persona"]
+    },
+    "example": {
+      "documentMarkdown": "Contatto: mario.rossi@example.com — tel +39 333 123 4567",
+      "persona": "pen",
+      "extraSensitiveTerms": ["Umberto"]
+    }
+  },
+  "outputs": {
+    "schemaPath": "prompt/ebook/contracts/privacy-scan.output.schema.json",
+    "example": {
+      "moduleId": "privacy-scan",
+      "version": "1.0.0",
+      "overallSeverity": "ALTO",
+      "totalHits": 2,
+      "hits": [
+        {
+          "id": "P-001",
+          "category": "email",
+          "severity": "ALTO",
+          "reason": "Email reale nel testo",
+          "snippetRedacted": "ma***@example.com"
+        },
+        {
+          "id": "P-002",
+          "category": "phone",
+          "severity": "ALTO",
+          "reason": "Numero di telefono nel testo",
+          "snippetRedacted": "**********67"
+        }
+      ],
+      "topFindings": ["Email reale presente", "Telefono reale presente"],
+      "recommendedActions": [
+        { "step": 1, "action": "Rimuovere o anonimizzare email e numeri di telefono (placeholder o contatti pubblici)."},
+        { "step": 2, "action": "Ripetere lo scan prima dell’export finale e bloccare se severity=ALTO/CRITICO."}
+      ]
+    }
+  },
+  "runtime": { "outputFormat": "json", "deterministic": true },
+  "promptTemplate": "Agisci come privacy officer tecnico e security reviewer. Scansiona il documento fornito e individua PII/dati sensibili reali. Non inventare dati.\n\nVincoli:\n- Output SOLO JSON valido, nessun testo extra.\n- Maschera i dati nel campo snippetRedacted (email/phone/iban/token/path).\n- Assegna severità per ogni hit e una severità globale.\n- Se persona=pen, considera anche nomi reali come leak (incluse occorrenze dei termini in extraSensitiveTerms).\n\nFormato output: deve rispettare lo schema prompt/ebook/contracts/privacy-scan.output.schema.json\n\nInput (JSON):\n{{INPUT_JSON}}\n\nDocumento (Markdown):\n{{DOCUMENT_MARKDOWN}}\n"
+}
+

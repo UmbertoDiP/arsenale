@@ -38,6 +38,5 @@
     },
     "promptTemplate": { "type": "string", "minLength": 1 }
   },
-  "required": ["id", "version", "name", "role", "inputs", "outputs", "runtime", "promptTemplate"]
+  "required": ["id", "version", "name", "role", "sourcePromptPath", "inputs", "outputs", "runtime", "promptTemplate"]
 }
-

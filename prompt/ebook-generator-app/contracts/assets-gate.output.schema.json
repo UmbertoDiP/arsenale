@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "AssetsGateOutput",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "moduleId": { "type": "string", "const": "assets-gate" },
+    "version": { "type": "string" },
+    "overallSeverity": { "type": "string", "enum": ["OK", "BASSO", "MEDIO", "ALTO", "CRITICO"] },
+    "totalAssets": { "type": "integer", "minimum": 0 },
+    "missingRequired": { "type": "array", "items": { "type": "string" } },
+    "missingOptional": { "type": "array", "items": { "type": "string" } },
+    "assets": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string" },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "pdf",
+              "epub",
+              "docx",
+              "cover_front",
+              "cover_wrap",
+              "cover_source",
+              "interior_images",
+              "preview_images",
+              "aplus_images",
+              "other"
+            ]
+          },
+          "required": { "type": "boolean" },
+          "exists": { "type": "boolean" },
+          "path": { "type": "string" }
+        },
+        "required": ["id", "kind", "required", "exists", "path"]
+      }
+    },
+    "recommendedActions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "step": { "type": "integer", "minimum": 1 },
+          "action": { "type": "string" }
+        },
+        "required": ["step", "action"]
+      }
+    }
+  },
+  "required": [
+    "moduleId",
+    "version",
+    "overallSeverity",
+    "totalAssets",
+    "missingRequired",
+    "missingOptional",
+    "assets",
+    "recommendedActions"
+  ]
+}

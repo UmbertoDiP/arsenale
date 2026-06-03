@@ -1,0 +1,107 @@
+{
+  "id": "assets-gate",
+  "version": "1.0.0",
+  "name": "Assets Gate — Publication Readiness Check",
+  "role": "CRITIC",
+  "sourcePromptPath": "prompt/ebook/assets-gate.txt",
+  "inputs": {
+    "schema": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "assets": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "id": { "type": "string" },
+              "kind": {
+                "type": "string",
+                "enum": [
+                  "pdf",
+                  "epub",
+                  "docx",
+                  "cover_front",
+                  "cover_wrap",
+                  "cover_source",
+                  "interior_images",
+                  "preview_images",
+                  "aplus_images",
+                  "other"
+                ]
+              },
+              "required": { "type": "boolean" },
+              "exists": { "type": "boolean" },
+              "path": { "type": "string" }
+            },
+            "required": ["id", "kind", "required", "exists", "path"]
+          }
+        },
+        "manualProcess": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "allowGeminiManualStep": { "type": "boolean" },
+            "reviewRequired": { "type": "boolean" }
+          }
+        }
+      },
+      "required": ["assets"]
+    },
+    "example": {
+      "assets": [
+        {
+          "id": "pdf-stable",
+          "kind": "pdf",
+          "required": true,
+          "exists": true,
+          "path": "outputs-pdf/book.pdf"
+        },
+        {
+          "id": "cover-front",
+          "kind": "cover_front",
+          "required": true,
+          "exists": false,
+          "path": "outputs-covers/cover-front.png"
+        }
+      ],
+      "manualProcess": { "allowGeminiManualStep": true, "reviewRequired": true }
+    }
+  },
+  "outputs": {
+    "schemaPath": "prompt/ebook/contracts/assets-gate.output.schema.json",
+    "example": {
+      "moduleId": "assets-gate",
+      "version": "1.0.0",
+      "overallSeverity": "ALTO",
+      "totalAssets": 2,
+      "missingRequired": ["cover-front"],
+      "missingOptional": [],
+      "assets": [
+        {
+          "id": "pdf-stable",
+          "kind": "pdf",
+          "required": true,
+          "exists": true,
+          "path": "outputs-pdf/book.pdf"
+        },
+        {
+          "id": "cover-front",
+          "kind": "cover_front",
+          "required": true,
+          "exists": false,
+          "path": "outputs-covers/cover-front.png"
+        }
+      ],
+      "recommendedActions": [
+        { "step": 1, "action": "Bloccare la release finché gli asset required mancanti non sono presenti." },
+        { "step": 2, "action": "Generare la cover manualmente (Gemini) seguendo una checklist e sottoporla a revisione umana." },
+        { "step": 3, "action": "Rieseguire l'Assets Gate e sbloccare solo se missingRequired è vuoto." }
+      ]
+    }
+  },
+  "runtime": { "outputFormat": "json", "deterministic": true },
+  "promptTemplate": "Agisci come release manager editoriale. Valuta la presenza degli asset richiesti sulla base della lista in input.\n\nVincoli:\n- Output SOLO JSON valido, nessun testo extra.\n- NON inventare file: usa solo i dati in input.\n- Se manca anche un solo asset required (exists=false), overallSeverity deve essere almeno ALTO.\n\nFormato output: deve rispettare lo schema prompt/ebook/contracts/assets-gate.output.schema.json\n\nInput (JSON):\n{{INPUT_JSON}}\n"
+}

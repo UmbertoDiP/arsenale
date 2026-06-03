@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ScanAiPdfOutput",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "moduleId": { "type": "string", "const": "scan-ai-pdf" },
+    "version": { "type": "string" },
+    "overallSeverity": { "type": "string", "enum": ["OK", "BASSO", "MEDIO", "ALTO", "CRITICO"] },
+    "overallScore": { "type": "number", "minimum": 0, "maximum": 10 },
+    "totalFindings": { "type": "integer", "minimum": 0 },
+    "findings": {
+      "type": "array",
+      "maxItems": 25,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string" },
+          "category": {
+            "type": "string",
+            "enum": [
+              "prompt_artifact",
+              "formatting_artifact",
+              "truncation",
+              "irrelevant_hallucination",
+              "repetitive_llm_pattern",
+              "other"
+            ]
+          },
+          "severity": { "type": "string", "enum": ["BASSO", "MEDIO", "ALTO", "CRITICO"] },
+          "reason": { "type": "string" },
+          "evidenceSnippet": { "type": "string" },
+          "locationHint": { "type": "string" }
+        },
+        "required": ["id", "category", "severity", "reason", "evidenceSnippet"]
+      }
+    },
+    "topFindings": { "type": "array", "items": { "type": "string" }, "maxItems": 10 },
+    "recommendedActions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "step": { "type": "integer", "minimum": 1 },
+          "action": { "type": "string" }
+        },
+        "required": ["step", "action"]
+      }
+    }
+  },
+  "required": [
+    "moduleId",
+    "version",
+    "overallSeverity",
+    "overallScore",
+    "totalFindings",
+    "findings",
+    "topFindings",
+    "recommendedActions"
+  ]
+}

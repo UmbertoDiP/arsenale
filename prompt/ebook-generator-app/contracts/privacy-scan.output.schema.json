@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "PrivacyScanOutput",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "moduleId": { "type": "string", "const": "privacy-scan" },
+    "version": { "type": "string" },
+    "overallSeverity": { "type": "string", "enum": ["OK", "BASSO", "MEDIO", "ALTO", "CRITICO"] },
+    "totalHits": { "type": "integer", "minimum": 0 },
+    "hits": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string" },
+          "category": {
+            "type": "string",
+            "enum": ["email", "phone", "iban", "tax_id", "address", "real_name", "url_sensitive", "credential", "local_path", "other"]
+          },
+          "severity": { "type": "string", "enum": ["BASSO", "MEDIO", "ALTO", "CRITICO"] },
+          "reason": { "type": "string" },
+          "snippetRedacted": { "type": "string" }
+        },
+        "required": ["id", "category", "severity", "reason", "snippetRedacted"]
+      }
+    },
+    "topFindings": { "type": "array", "items": { "type": "string" }, "maxItems": 10 },
+    "recommendedActions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "step": { "type": "integer", "minimum": 1 },
+          "action": { "type": "string" }
+        },
+        "required": ["step", "action"]
+      }
+    }
+  },
+  "required": ["moduleId", "version", "overallSeverity", "totalHits", "hits", "topFindings", "recommendedActions"]
+}
+

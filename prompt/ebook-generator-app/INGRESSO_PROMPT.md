@@ -19,13 +19,23 @@ File chiave:
   - prompt-contract.schema.json
   - content-gap.contract.json
   - content-gap.output.schema.json
+  - privacy-scan.contract.json
+  - privacy-scan.output.schema.json
+  - scan-ai-pdf.contract.json
+  - scan-ai-pdf.output.schema.json
+  - assets-gate.contract.json
+  - assets-gate.output.schema.json
 
 Primo modulo già contrattualizzato:
 - CRITIC: content-gap (audit lacune + score + findings JSON)
+- CRITIC: privacy-scan (scan PII/dati sensibili con snippet mascherati + severity)
+- CRITIC: scan-ai-pdf (artefatti tipici LLM/prompt non revisionati su testo PDF)
+- CRITIC: assets-gate (verifica asset richiesti; BLOCCO se mancano cover/immagini)
 
 Comando mentale (regola di base):
 - Se CRITIC restituisce severità CRITICO/ALTO oppure score < soglia → FIXER → CRITIC (loop).
-- Se score >= soglia e nessun CRITICO/ALTO → passa a Scan-AI → Export/Design.
+- Se score >= soglia e nessun CRITICO/ALTO → Privacy Scan → Export/Design → Scan-AI → Assets Gate.
+- Circuit breaker: se supera workflow.maxIterations → BLOCCO e richiede intervento umano.
 
 Chiusura conversazione (standard operativo):
 - Aggiorna sempre: INGRESSO_PROMPT.md + HOW_IT_WORKS.md (se cambia la pipeline).
@@ -34,4 +44,3 @@ Chiusura conversazione (standard operativo):
   - link al file INGRESSO_PROMPT.md
   - blocco copiabile con path assoluto del file INGRESSO_PROMPT.md
   - stato corrente (1–4 bullet) + next step (1–4 bullet) + comandi ready-to-use (max 6)
-

@@ -1,0 +1,65 @@
+{
+  "id": "scan-ai-pdf",
+  "version": "1.0.0",
+  "name": "Scan-AI (PDF/Text) — LLM Artifact Audit",
+  "role": "CRITIC",
+  "sourcePromptPath": "prompt/ebook/scan-ai-pdf.txt",
+  "inputs": {
+    "schema": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "documentText": { "type": "string", "minLength": 1 },
+        "source": { "type": "string", "enum": ["pdf_text", "kdp_markdown", "unknown"] },
+        "context": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "bookTitle": { "type": "string" },
+            "language": { "type": "string" }
+          }
+        }
+      },
+      "required": ["documentText"]
+    },
+    "example": {
+      "documentText": "Certamente! In questo capitolo esploreremo... continue...",
+      "source": "pdf_text",
+      "context": { "bookTitle": "Esempio", "language": "it" }
+    }
+  },
+  "outputs": {
+    "schemaPath": "prompt/ebook/contracts/scan-ai-pdf.output.schema.json",
+    "example": {
+      "moduleId": "scan-ai-pdf",
+      "version": "1.0.0",
+      "overallSeverity": "ALTO",
+      "overallScore": 8.7,
+      "totalFindings": 2,
+      "findings": [
+        {
+          "id": "S-001",
+          "category": "prompt_artifact",
+          "severity": "ALTO",
+          "reason": "Residuo tipico da chat/prompt nel testo pubblicato",
+          "evidenceSnippet": "Certamente! ... continue..."
+        },
+        {
+          "id": "S-002",
+          "category": "repetitive_llm_pattern",
+          "severity": "MEDIO",
+          "reason": "Struttura e frasario ripetitivi tipici LLM",
+          "evidenceSnippet": "In questo capitolo esploreremo... la regola d'oro..."
+        }
+      ],
+      "topFindings": ["S-001", "S-002"],
+      "recommendedActions": [
+        { "step": 1, "action": "Rimuovere residui da prompt/chat e riscrivere le frasi incriminate." },
+        { "step": 2, "action": "Variare struttura e stile dei capitoli, aggiungendo dettagli concreti e revisione umana." },
+        { "step": 3, "action": "Ripetere lo scan sul testo post-fix e bloccare se severity=ALTO/CRITICO." }
+      ]
+    }
+  },
+  "runtime": { "outputFormat": "json", "deterministic": true },
+  "promptTemplate": "Agisci come revisore editoriale tecnico. Analizza il testo fornito e identifica indicatori forti di generazione LLM non revisionata.\n\nVincoli:\n- NON inventare prove: segnala solo ciò che trovi nel testo.\n- Output SOLO JSON valido, nessun testo extra.\n- evidenceSnippet max 160 caratteri; non riportare porzioni lunghe.\n- Assegna severità per finding e severità globale: OK | BASSO | MEDIO | ALTO | CRITICO.\n- Dai anche overallScore 0..10 (10 = altissima probabilità di artefatti LLM non revisionati).\n\nFormato output: deve rispettare lo schema prompt/ebook/contracts/scan-ai-pdf.output.schema.json\n\nInput (JSON):\n{{INPUT_JSON}}\n\nTesto da analizzare:\n{{DOCUMENT_TEXT}}\n"
+}

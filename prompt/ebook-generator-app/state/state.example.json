@@ -1,4 +1,5 @@
 {
+  "stateVersion": "1.0.0",
   "project": {
     "title": "Titolo Libro (placeholder)",
     "niche": "Nicchia / categoria (placeholder)",
@@ -9,7 +10,8 @@
   "workflow": {
     "phase": "INGESTION",
     "criticThresholdScore": 8,
-    "blockSeverities": ["CRITICO", "ALTO"]
+    "blockSeverities": ["CRITICO", "ALTO"],
+    "maxIterations": { "contentGap": 5, "privacyScan": 3 }
   },
   "quality": {
     "last": {
@@ -19,12 +21,19 @@
     },
     "history": []
   },
+  "gates": [],
+  "blocks": [],
+  "approvals": {
+    "covers": { "status": "NOT_READY" },
+    "images": { "status": "NOT_READY" }
+  },
+  "contractsUsed": [],
   "artifacts": {
     "canonicalMarkdownPath": "",
     "kdpMarkdownPath": "",
     "pdfStablePath": "",
     "coversDir": "",
-    "previewImagesDir": ""
+    "previewImagesDir": "",
+    "scanAiPdfTextPath": ""
   }
 }
-

@@ -1,0 +1,157 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "KdpPipelineState",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "stateVersion": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$" },
+    "project": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "title": { "type": "string", "minLength": 1 },
+        "niche": { "type": "string" },
+        "language": { "type": "string", "minLength": 2 },
+        "tone": { "type": "string" },
+        "persona": { "type": "string", "enum": ["dev", "pen", "unknown"] }
+      },
+      "required": ["title", "language", "persona"]
+    },
+    "workflow": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "phase": { "type": "string" },
+        "criticThresholdScore": { "type": "number", "minimum": 0, "maximum": 10 },
+        "blockSeverities": {
+          "type": "array",
+          "items": { "type": "string", "enum": ["OK", "BASSO", "MEDIO", "ALTO", "CRITICO"] },
+          "minItems": 1
+        },
+        "maxIterations": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "contentGap": { "type": "integer", "minimum": 1 },
+            "privacyScan": { "type": "integer", "minimum": 1 }
+          },
+          "required": ["contentGap", "privacyScan"]
+        }
+      },
+      "required": ["phase", "criticThresholdScore", "blockSeverities"]
+    },
+    "quality": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "last": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "moduleId": { "type": "string" },
+            "score": { "type": "number", "minimum": 0, "maximum": 10 },
+            "severity": { "type": "string", "enum": ["OK", "BASSO", "MEDIO", "ALTO", "CRITICO"] }
+          },
+          "required": ["moduleId", "score", "severity"]
+        },
+        "history": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": true,
+            "properties": {
+              "moduleId": { "type": "string" },
+              "score": { "type": "number", "minimum": 0, "maximum": 10 },
+              "severity": { "type": "string", "enum": ["OK", "BASSO", "MEDIO", "ALTO", "CRITICO"] },
+              "at": { "type": "string", "minLength": 10 }
+            },
+            "required": ["moduleId", "score", "severity", "at"]
+          }
+        }
+      }
+    },
+    "gates": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "gateId": { "type": "string" },
+          "status": { "type": "string", "enum": ["PASS", "WARN", "BLOCK"] },
+          "severity": { "type": "string", "enum": ["OK", "BASSO", "MEDIO", "ALTO", "CRITICO"] },
+          "summary": { "type": "string" },
+          "at": { "type": "string", "minLength": 10 }
+        },
+        "required": ["gateId", "status", "severity", "summary", "at"]
+      }
+    },
+    "blocks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "code": { "type": "string" },
+          "severity": { "type": "string", "enum": ["OK", "BASSO", "MEDIO", "ALTO", "CRITICO"] },
+          "message": { "type": "string" },
+          "moduleId": { "type": "string" },
+          "createdAt": { "type": "string", "minLength": 10 }
+        },
+        "required": ["code", "severity", "message", "createdAt"]
+      }
+    },
+    "approvals": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "covers": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "status": { "type": "string", "enum": ["NOT_READY", "READY_FOR_REVIEW", "APPROVED"] },
+            "by": { "type": "string" },
+            "at": { "type": "string", "minLength": 10 }
+          },
+          "required": ["status"]
+        },
+        "images": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "status": { "type": "string", "enum": ["NOT_READY", "READY_FOR_REVIEW", "APPROVED"] },
+            "by": { "type": "string" },
+            "at": { "type": "string", "minLength": 10 }
+          },
+          "required": ["status"]
+        }
+      },
+      "required": ["covers", "images"]
+    },
+    "contractsUsed": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "moduleId": { "type": "string" },
+          "version": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$" },
+          "at": { "type": "string", "minLength": 10 }
+        },
+        "required": ["moduleId", "version", "at"]
+      }
+    },
+    "artifacts": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "canonicalMarkdownPath": { "type": "string" },
+        "kdpMarkdownPath": { "type": "string" },
+        "pdfStablePath": { "type": "string" },
+        "coversDir": { "type": "string" },
+        "previewImagesDir": { "type": "string" },
+        "scanAiPdfTextPath": { "type": "string" }
+      }
+    }
+  },
+  "required": ["stateVersion", "project", "workflow"]
+}

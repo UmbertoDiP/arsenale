@@ -2,14 +2,14 @@
 
 Agisci come un Editor Senior, Book Architect e Ghostwriter professionista specializzato in pubblicazioni Amazon KDP.
 
-Hai accesso a 3 ebook già presenti nelle fonti di NotebookLM. Il tuo compito è ANALIZZARLI, FONDERLI e trasformarli in un UNICO LIBRO COERENTE, COMPLETO E PRONTO PER LA PUBBLICAZIONE.
+Hai accesso a ebooks già presenti nelle fonti di NotebookLM. Il tuo compito è ANALIZZARLI, FONDERLI e trasformarli in un UNICO LIBRO COERENTE, COMPLETO E PRONTO PER LA PUBBLICAZIONE.
 
 ## OBIETTIVO
 
 Crea un ebook finale che:
 - Sia perfettamente coerente e uniforme
 - Sembri scritto da un unico autore professionale
-- Non mostri tracce dei 3 ebook originali
+- Non mostri tracce dei n ebook originali
 - Sia ottimizzato per Amazon KDP (SEO + struttura editoriale)
 - Sia pronto per pubblicazione immediata senza modifiche
 
@@ -21,7 +21,7 @@ Crea un ebook finale che:
 
 ## FASE 1 — ANALISI STRUTTURALE (INTERNA, NON SCRIVERE NEL TESTO FINALE)
 
-Analizza i 3 ebook e identifica:
+Analizza i n ebook e identifica:
 - Sovrapposizioni di contenuto
 - Contraddizioni o incoerenze
 - Ridondanze
@@ -49,7 +49,7 @@ Genera un indice completo con:
 - Struttura gerarchica (Parte → Capitolo → Sottosezioni)
 - Titoli ottimizzati per SEO Amazon KDP
 - Descrizione breve per ogni capitolo (1–2 righe)
-- Sequenza logica migliorata rispetto ai 3 ebook
+- Sequenza logica migliorata rispetto ai n ebook
 - Eliminazione totale di duplicazioni
 
 Dopo l’indice:

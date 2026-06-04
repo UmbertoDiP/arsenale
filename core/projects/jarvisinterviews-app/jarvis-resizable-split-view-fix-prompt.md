@@ -2,175 +2,90 @@
 
 ## ROLE
 Agisci come:
-- Principal Frontend Architect
+- Principal Frontend Architect (React Specialist)
 - UI Systems Engineer
 - Performance & Layout Engineer
 - UX Interaction Designer
 - QA Automation Lead
 
 Obiettivo:
-Correggere e riprogettare completamente il sistema di barra di trascinamento (split divider) nelle seguenti viste:
+Riprogettare in modo **impeccabile e 100% bug-free** il sistema di barra di trascinamento (split divider) nelle seguenti viste:
 1. Vista Sfera (Sfera ↔ Teleprompter panel)
 2. Vista Lista (Cards ↔ Tutorial completo panel)
 
-Il sistema attuale è instabile, non fluido e causa:
-- clipping UI
-- rendering incompleto
-- resize errato
-- comportamento non coerente tra viewport
-- esperienza utente degradante
+L'obiettivo è perfezionare ogni elemento e generare *tutti i breakpoint responsive mancanti* in modo da supportare perfettamente Mobile, Tablet, Desktop e 4K, senza glitch di resize o UI clipping.
 
 ---
-## FASE 1 — ANALISI LAYOUT ATTUALE
-Analizzare:
-- struttura DOM/Componenti
-- gestione flex/grid attuale
-- event handling del resize
-- eventuali re-render inutili
-- gestione state (React state / Angular state / store)
+## FASE 1 — ARCHITETTURA MODERNA DEL LAYOUT (REACT)
+Implementare un sistema unico e riutilizzabile: **SPLIT LAYOUT ENGINE**
 
-Identificare:
-- perché il divider non funziona correttamente
-- dove avvengono i glitch
-- dove avviene clipping del teleprompter
-- differenze tra viewport (desktop/tablet/mobile)
+Regole Tecnologiche:
+- **React-Resizable-Panels:** Dato l'uso di React, utilizza librerie ultra-ottimizzate come `react-resizable-panels` (o architetture Vanilla equivalenti basate su Refs) per prevenire re-render globali durante il dragging. Non reinventare la ruota se esiste uno standard affidabile.
+- Mai ricreare componenti interni (NO duplicazione teleprompter o tutorial).
+- Non montare/unmountare componenti durante il drag (solo resize del container).
 
 ---
-## FASE 2 — ARCHITETTURA CORRETTA DEL SPLIT VIEW
-Implementare un sistema unico e riutilizzabile:
-**SPLIT LAYOUT ENGINE**
-
-Requisiti:
-- 2 pannelli affiancati (left/right o top/bottom se mobile)
-- divider centrale trascinabile
-- resize continuo (non a step)
-- constraint min/max width
-
-Regole:
-- mai ricreare componenti interni (NO duplicazione teleprompter o tutorial)
-- usare SOLO resize del container
-- non montare/unmountare componenti durante drag
+## FASE 2 — 100% PERFECT RESPONSIVE UI & VIEWPORT
+Applicare le moderne best practice CSS per evitare i classici bug di viewport:
+- **Dynamic Viewports:** Bandito l'uso di `100vh`. Utilizza **esclusivamente `100dvh`** per il layout a schermo intero (o `svh` per il bottom snapping). Questo evita che l'UI si rompa su mobile quando scompare o appare la barra degli indirizzi del browser.
+- **Breakpoint Completi:** Genera regole per:
+  - Mobile (stacked layout verticale, fallback).
+  - Tablet (split adattivo orientato alla leggibilità).
+  - Desktop (split orizzontale).
+  - 4K (max-width constraints per non deformare la UI).
 
 ---
-## FASE 3 — DRAG BEHAVIOR (CRITICO)
-Il comportamento del divider deve essere:
-- fluido (60fps target)
-- senza jitter
-- senza lag
-- senza re-render globale della pagina
-
-Implementare:
-- pointer events (pointerdown / pointermove / pointerup)
-- supporto mouse + touch + trackpad
-- throttling leggero SOLO se necessario
-- gestione boundary constraints
+## FASE 3 — CONTAINER QUERIES (NO CLIPPING)
+Per evitare che il testo o le card si taglino quando l'utente ridimensiona il pannello:
+- **Divieto di Media Queries Globali sui figli:** Non usare `@media` queries per gli elementi interni ai pannelli.
+- **Obbligo di Container Queries:** Definisci il pannello genitore con `container-type: inline-size;`. Utilizza `@container` queries e unità relative (`cqw`) per fare in modo che il Teleprompter e la Lista si ridimensionino perfettamente *in base alla larghezza del loro pannello*, non dello schermo intero.
 
 ---
-## FASE 4 — LAYOUT RULES
-Definire regole rigide:
-- min width pannello sinistro: 20%
-- max width pannello sinistro: 80%
-- il resto si adatta automaticamente
+## FASE 4 — BULLETPROOF DRAG BEHAVIOR & OBSERVERS
+Il comportamento del divider deve essere fluido a 60fps, senza jitter e senza scroll hijacking su touch screen.
+- **Touch Bug Fix:** Applica tassativamente `touch-action: none;` al divider per evitare che il browser confonda il drag con lo scroll della pagina. Usa i `PointerEvents`.
+- **ResizeObserver Loop Fix:** Previeni in modo assoluto l'errore `ResizeObserver loop limit exceeded`. Se usi un Observer, non mutare le dimensioni del DOM direttamente nel callback. Usa `requestAnimationFrame` o logica di throttling.
+
+---
+## FASE 5 — LAYOUT RULES & STATE PERSISTENCE
+Definire regole rigide di vincolo spaziale:
+- min width pannello sinistro: 20%, max width pannello sinistro: 80%.
+- Salvare la posizione del divider nel `localStorage` per utente e per vista (ripristinarla al caricamento).
 
 Vista Sfera:
 - LEFT: Sfera
-- RIGHT: Teleprompter panel (RIUSATO, NON ricreato)
+- RIGHT: Teleprompter panel (RIUSATO, state preserved)
 
 Vista Lista:
 - LEFT: Cards list
 - RIGHT: Tutorial completo (single source of truth)
 
 ---
-## FASE 5 — TELEPROMPTER PANEL (VINCOLO CRITICO)
-Il teleprompter:
-- NON deve essere ricreato
-- NON deve essere duplicato
-- NON deve essere rimontato durante resize
-
-Deve essere:
-- shared component instance
-- state preserved
-- layout responsive only via container resizing
+## FASE 6 — VISUAL INDICATOR (UX IMPROVEMENT)
+Il divider deve essere elegante ma evidente:
+- spessore percepibile e hover state.
+- drag cursor corretto (`col-resize` / `row-resize`).
+- micro-feedback visivo senza causare paint-lag.
 
 ---
-## FASE 6 — RESPONSIVE BEHAVIOR
-Gestire correttamente:
-- Desktop: split orizzontale
-- Tablet: split adattivo
-- Mobile: fallback a stacked layout (vertical)
-
-Verificare:
-- nessun overflow orizzontale
-- nessun clipping contenuto
-- nessun cutoff del teleprompter
+## FASE 7 — BUG FIX E REGRESSION CONTROL
+Risolvere ogni criticità attuale:
+- clipping teleprompter in alcune resolution.
+- UI tagliata in responsive mode.
+- mismatch tra vista sfera e vista lista.
+- verifica che cards e tutorial non subiscano layout shift continui.
 
 ---
-## FASE 7 — VISUAL INDICATOR (UX IMPROVEMENT)
-Il divider deve essere chiaramente visibile:
-- spessore percepibile
-- hover state
-- drag cursor (col-resize / row-resize)
-- feedback visivo durante drag
-- stile elegante ma evidente
+## FASE 8 — TEST AUTOMATICI (OBBLIGATORIO)
+Generare set di test completi:
+- Unit Test: divider state update, boundary constraints.
+- Integration Test: layout sync tra pannelli, persistence restore.
+- Visual Regression Test: 0% clipping su teleprompter e lista in tutti i breakpoint.
 
 ---
-## FASE 8 — STATE PERSISTENCE
-Salvare:
-- posizione divider
-- per utente
-- per vista (sfera / lista)
-
-Persistenza:
-- localStorage o backend (in base al sistema esistente)
-
-Regola:
-- all’apertura vista, ripristinare ultimo layout
-
----
-## FASE 9 — PERFORMANCE REQUIREMENTS
-Il resize NON deve causare:
-- rerender completo pagina
-- reload componenti
-- perdita stato teleprompter
-- perdita stato lista/tutorial
-
-Obiettivo: layout update only (no logic re-run)
-
----
-## FASE 10 — BUG FIX OBBLIGATORI
-Risolvere:
-- clipping teleprompter in alcune resolution
-- UI tagliata in responsive mode
-- divider non preciso o non fluido
-- mismatch tra vista sfera e vista lista
-
----
-## FASE 11 — TEST AUTOMATICI (OBBLIGATORIO)
-Generare test:
-- Unit Test: divider state update, boundary constraints
-- Integration Test: layout sync tra pannelli, persistence restore
-- E2E Test: drag divider → verify resize, refresh page → verify state restored
-- Visual Regression Test: no clipping teleprompter, no UI overflow
-- Performance Test: drag stress test (100+ resize events)
-
----
-## FASE 12 — REGRESSION CONTROL
-Verificare che:
-- teleprompter non venga duplicato
-- tutorial non venga duplicato
-- cards non vengano re-renderizzate inutilmente
-- nessun layout shift continuo
-
----
-## FASE 13 — OUTPUT FINALE
+## FASE 9 — OUTPUT FINALE
 Restituire:
-- STATUS: FIXED / PARTIALLY FIXED / NOT FIXED
-- ISSUES FOUND: elenco bug reali
-- FIX APPLIED: cosa è stato modificato
-- UX RESULT: fluido / instabile / migliorato
-- RISK: regressioni possibili
-- TEST COVERAGE: elenco test generati
-
----
-## FASE 14 — GOAL FINALE
-Sistema finale deve garantire: divider stabile, resize fluido, nessun clipping, teleprompter riusato, vista lista coerente, UX consistente, comportamento identico su browser moderni.
+- STATUS: FIXED
+- ISSUES FOUND: Elenco dei problemi di viewport, observer e rendering corretti.
+- RESPONSIVE AUDIT: Check sui breakpoint implementati (dvh, container queries).
+- UX RESULT: Conferma stabilità e test eseguiti.
